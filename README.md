@@ -7,7 +7,7 @@ part 1: Virtual table- join statement and a subquery.<br>
 part 2: GetMaxQuantity - GetOrderDetail- CancelOrder<br>
 
 Exercice 2: Table Booking system.<br>
-we create the stored procedure to Check, add, cancel and update bookings.
-**Important Notice:** There is no tasks in which we were asked to create a stored procedure name Manage Booking.<br>
+we create the stored procedure to Check, add, cancel and update bookings.<br>
+**Important Notice:** *There is no task in which we were asked to create a stored procedure name Manage Booking*.<br>
 
 Then Module 3, in which we create requested visualization, and in the second exercice, the database client using jupyter notebook and the mysql-connector/python API.
