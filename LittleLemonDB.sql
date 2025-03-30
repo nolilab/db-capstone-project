@@ -1,140 +1,178 @@
--- MySQL dump 10.13  Distrib 8.0.40, for Win64 (x86_64)
---
--- Host: 127.0.0.1    Database: littlelemondb
--- ------------------------------------------------------
--- Server version	8.0.40
+-- MySQL Workbench Forward Engineering
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
---
--- Table structure for table `bookings`
---
+-- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
+-- Schema littlelemondm
+-- -----------------------------------------------------
 
-DROP TABLE IF EXISTS `bookings`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `bookings` (
-  `BookingID` int NOT NULL,
-  `TableNo` int NOT NULL,
-  `EmployeeID` int NOT NULL,
-  `ClientID` int NOT NULL,
+-- -----------------------------------------------------
+-- Schema littlelemondm
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `littlelemondm` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE `littlelemondm` ;
+
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`staff`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`staff` (
+  `EmployeeID` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(255) NOT NULL,
+  `Role` VARCHAR(100) NOT NULL,
+  `Address` VARCHAR(255) NULL DEFAULT NULL,
+  `Contact_Number` VARCHAR(15) NOT NULL,
+  `Email` VARCHAR(255) NOT NULL,
+  `Annual_Salary` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`EmployeeID`),
+  UNIQUE INDEX `Contact_Number` (`Contact_Number` ASC) VISIBLE,
+  UNIQUE INDEX `Email` (`Email` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`customers`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`customers` (
+  `ClientID` INT NOT NULL AUTO_INCREMENT,
+  `ClientFirstName` VARCHAR(250) NOT NULL,
+  `ClientLastName` VARCHAR(250) NOT NULL,
+  `PhoneNumber` VARCHAR(15) NOT NULL,
+  `Email` VARCHAR(200) NOT NULL,
+  PRIMARY KEY (`ClientID`),
+  UNIQUE INDEX `PhoneNumber` (`PhoneNumber` ASC) VISIBLE,
+  UNIQUE INDEX `Email` (`Email` ASC) VISIBLE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`bookings`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`bookings` (
+  `BookingID` INT NOT NULL AUTO_INCREMENT,
+  `TableNo` INT NULL DEFAULT NULL,
+  `EmployeeID` INT NULL DEFAULT NULL,
+  `ClientID` INT NOT NULL,
+  `BookingTime` DATETIME NOT NULL,
   PRIMARY KEY (`BookingID`),
-  KEY `employeeid_idx` (`EmployeeID`),
-  KEY `ClientID_idx` (`ClientID`),
-  CONSTRAINT `ClientID` FOREIGN KEY (`ClientID`) REFERENCES `customers` (`ClientID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `employeeid` FOREIGN KEY (`EmployeeID`) REFERENCES `staff` (`EmployeeID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `EmployeeID` (`EmployeeID` ASC) VISIBLE,
+  INDEX `ClientID` (`ClientID` ASC) VISIBLE,
+  CONSTRAINT `bookings_ibfk_1`
+    FOREIGN KEY (`EmployeeID`)
+    REFERENCES `littlelemondm`.`staff` (`EmployeeID`)
+    ON DELETE SET NULL,
+  CONSTRAINT `bookings_ibfk_2`
+    FOREIGN KEY (`ClientID`)
+    REFERENCES `littlelemondm`.`customers` (`ClientID`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 15
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `customers`
---
 
-DROP TABLE IF EXISTS `customers`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `customers` (
-  `ClientID` int NOT NULL,
-  `Clientfistname` varchar(255) NOT NULL,
-  `ClientLastName` varchar(255) NOT NULL,
-  `PhoneNum` int NOT NULL,
-  `Email` varchar(100) NOT NULL,
-  PRIMARY KEY (`ClientID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`menus`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`menus` (
+  `MenuID` INT NOT NULL AUTO_INCREMENT,
+  `MenuName` VARCHAR(200) NOT NULL,
+  `Cuisine` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`MenuID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `delivery`
---
 
-DROP TABLE IF EXISTS `delivery`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `delivery` (
-  `DeliveryID` int NOT NULL,
-  `DeliveryDate` date NOT NULL,
-  `DeliveryStatus` varchar(255) NOT NULL,
-  `OrderID` int NOT NULL,
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`orders`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`orders` (
+  `OrderID` INT NOT NULL AUTO_INCREMENT,
+  `TableNo` INT NOT NULL,
+  `MenuID` INT NOT NULL,
+  `BookingID` INT NOT NULL,
+  `BillAmount` DECIMAL(10,2) NOT NULL,
+  `Quantity` INT NULL DEFAULT NULL,
+  `OrderDate` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`OrderID`),
+  INDEX `BookingID` (`BookingID` ASC) VISIBLE,
+  INDEX `MenuID` (`MenuID` ASC) VISIBLE,
+  CONSTRAINT `orders_ibfk_1`
+    FOREIGN KEY (`BookingID`)
+    REFERENCES `littlelemondm`.`bookings` (`BookingID`)
+    ON DELETE CASCADE,
+  CONSTRAINT `orders_ibfk_2`
+    FOREIGN KEY (`MenuID`)
+    REFERENCES `littlelemondm`.`menus` (`MenuID`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 12
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`delivery`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`delivery` (
+  `DeliveryID` INT NOT NULL AUTO_INCREMENT,
+  `DeliveryDate` DATE NOT NULL,
+  `DeliveryStatus` ENUM('Pending', 'Dispatched', 'Delivered', 'Cancelled') NOT NULL,
+  `OrderID` INT NOT NULL,
   PRIMARY KEY (`DeliveryID`),
-  KEY `orderid_idx` (`OrderID`),
-  CONSTRAINT `orderid` FOREIGN KEY (`OrderID`) REFERENCES `orders` (`OrderID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  INDEX `OrderID` (`OrderID` ASC) VISIBLE,
+  CONSTRAINT `delivery_ibfk_1`
+    FOREIGN KEY (`OrderID`)
+    REFERENCES `littlelemondm`.`orders` (`OrderID`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `menus`
---
 
-DROP TABLE IF EXISTS `menus`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `menus` (
-  `MenuID` int NOT NULL,
-  `Cuisine` varchar(100) DEFAULT NULL,
-  `Starter` varchar(100) DEFAULT NULL,
-  `Course` varchar(45) DEFAULT NULL,
-  `Dessert` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`MenuID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COMMENT='	';
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`menuitems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`menuitems` (
+  `MenuItemID` INT NOT NULL AUTO_INCREMENT,
+  `Name` VARCHAR(200) NOT NULL,
+  `CourseType` ENUM('Starter', 'Main Course', 'Dessert') NOT NULL,
+  `Price` DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (`MenuItemID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `orders`
---
 
-DROP TABLE IF EXISTS `orders`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `orders` (
-  `OrderID` int NOT NULL,
-  `TableNo` int NOT NULL,
-  `MenuID` int NOT NULL,
-  `BookingID` int NOT NULL,
-  `BillAmount` decimal(10,2) NOT NULL,
-  `Quantity` int NOT NULL,
-  PRIMARY KEY (`OrderID`,`TableNo`),
-  KEY `menuid_idx` (`MenuID`),
-  KEY `BookingID_idx` (`BookingID`),
-  CONSTRAINT `BookingID` FOREIGN KEY (`BookingID`) REFERENCES `bookings` (`BookingID`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `menuid` FOREIGN KEY (`MenuID`) REFERENCES `menus` (`MenuID`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
+-- -----------------------------------------------------
+-- Table `littlelemondm`.`menu_menuitems`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `littlelemondm`.`menu_menuitems` (
+  `MenuID` INT NOT NULL,
+  `MenuItemID` INT NOT NULL,
+  PRIMARY KEY (`MenuID`, `MenuItemID`),
+  INDEX `MenuItemID` (`MenuItemID` ASC) VISIBLE,
+  CONSTRAINT `menu_menuitems_ibfk_1`
+    FOREIGN KEY (`MenuID`)
+    REFERENCES `littlelemondm`.`menus` (`MenuID`),
+  CONSTRAINT `menu_menuitems_ibfk_2`
+    FOREIGN KEY (`MenuItemID`)
+    REFERENCES `littlelemondm`.`menuitems` (`MenuItemID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
---
--- Table structure for table `staff`
---
-
-DROP TABLE IF EXISTS `staff`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `staff` (
-  `EmployeeID` int NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) NOT NULL,
-  `Role` varchar(45) NOT NULL,
-  `Address` varchar(255) NOT NULL,
-  `ContactNum` int NOT NULL,
-  `email` varchar(100) NOT NULL,
-  `Annual Salary` decimal(10,2) NOT NULL,
-  PRIMARY KEY (`EmployeeID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2025-03-10  0:40:25
